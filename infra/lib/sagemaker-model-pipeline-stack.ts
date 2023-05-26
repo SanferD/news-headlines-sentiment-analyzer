@@ -1,15 +1,17 @@
+import * as assert from 'assert';
 import * as cdk from 'aws-cdk-lib';
-import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as sagemaker from 'aws-cdk-lib/aws-sagemaker'
+import * as fs from 'fs'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as path from 'path'
+import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as sagemaker from 'aws-cdk-lib/aws-sagemaker'
 import { execSync } from 'child_process'
-import { readFileSync } from 'fs'
 
 const PIPELINE_NAME = "NEWS-HEADLINES-PIPELINE"
 const SM_PIPELINE_PATH = path.join("..", "sm-pipeline");
 const PIPELINE_PY_PATH = path.join(SM_PIPELINE_PATH, "pipeline.py")
 const PIPELINE_JSON_PATH = path.join(SM_PIPELINE_PATH, "pipeline.json")
+const DATA_BUCKET_NAME = "DataBucketName"
 
 export interface SagemakerModelPipelineStackProps extends cdk.StackProps {
     dataBucket: s3.Bucket
@@ -21,13 +23,17 @@ export class SagemakerModelPipelineStack extends cdk.Stack {
         
         // run the python script and fetch the pipeline body
         execSync(`python ${PIPELINE_PY_PATH}`)
-        const pipelineDefinitionJson = readFileSync(PIPELINE_JSON_PATH, 'utf-8')
+        const pipelineDefinitionJson = fs.readFileSync(PIPELINE_JSON_PATH, 'utf-8')
         const pipelineDefinitionBody = JSON.parse(pipelineDefinitionJson)
+        let foundDataBucketNameParameter = false
         pipelineDefinitionBody["Parameters"].forEach((param: any) => {
-            if (param["Name"] == "DataBucketName") {
+            if (param["Name"] == DATA_BUCKET_NAME) {
                 param["DefaultValue"] = props.dataBucket.bucketName
+                foundDataBucketNameParameter = true
             }
         });
+        assert.ok(foundDataBucketNameParameter,
+            `Parameter with "Name" == ${DATA_BUCKET_NAME} not in pipelineDefinition`)
 
         // create the model pipeline
         const role = this.createSagemakerPipelineRole(props);

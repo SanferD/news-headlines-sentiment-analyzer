@@ -4,7 +4,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import * as utility from './utility'
 import * as fs from 'fs';
-import assert = require('assert');
+import * as assert from 'assert';
 
 const RAW = "raw"
 const SENTIMENT_FILE_NAME = "sentiment.zip"
