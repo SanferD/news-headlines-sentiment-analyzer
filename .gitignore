@@ -9,3 +9,4 @@ cdk.out
 *.pyc
 pipeline.json
 sentiment.zip
+.vscode
