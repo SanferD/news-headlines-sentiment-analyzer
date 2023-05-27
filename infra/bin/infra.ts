@@ -6,6 +6,7 @@ import { DataUploadStack } from '../lib/data-upload-stack';
 import { SagemakerSetupStack } from '../lib/sagemaker-setup-stack';
 import { DeploymentPipelineLambdasStack } from '../lib/deployment-pipeline-lambdas-stack';
 import { DeploymentPipelineStack } from '../lib/deployment-pipeline-stack';
+import { DeploymentPipelineTriggerStack } from '../lib/deployment-pipeline-trigger-stack';
 
 interface StackProps {
   env: {account: string, region: string}
@@ -49,6 +50,11 @@ function createStacks({app, stackProps} : createStacksProps) {
     ...stackProps,
     createOrUpdateEndpoint: deploymentPipelineLambdasStack.createOrUpdateEndpoint,
     dataBucket: dataBucketStack.dataBucket,
+  })
+
+  const deploymentPipelineTriggerStack = new DeploymentPipelineTriggerStack(app, "DeploymentPipelineTriggerStack", {
+    ...stackProps,
+    triggerModelDeploy: deploymentPipelineLambdasStack.triggerModelDeploy,
   })
 
 }
