@@ -8,6 +8,8 @@ export class SagemakerDataBucketStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     
-    this.dataBucket = new s3.Bucket(this, "DataBucket", {})
+    this.dataBucket = new s3.Bucket(this, "DataBucket", {
+      versioned: true, // required for codepipeline
+    })
   }
 }
