@@ -1,4 +1,4 @@
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError, WaiterError
 import boto3
 import datetime
 import json
@@ -150,9 +150,14 @@ def upsert_endpoint(model_name, now_str):
             put_job_failure(e)
             raise e
 
-    log.info(f"Waiting for Endpoint {ENDPOINT_NAME} to be InService")
-    waiter = sagemaker_client.get_waiter("endpoint_in_service")
-    waiter.wait(EndpointName=ENDPOINT_NAME)
+    try:
+        log.info(f"Waiting for Endpoint {ENDPOINT_NAME} to be InService")
+        waiter = sagemaker_client.get_waiter("endpoint_in_service")
+        waiter.wait(EndpointName=ENDPOINT_NAME)
+    except WaiterError as e:
+        log.exception("Waiter timedout, possibly endpoint failed to deploy ?")
+        put_job_failure(e)
+        raise e
 
 
 def create_sagemaker_endpoint_config(model_name, endpoint_config_name):
