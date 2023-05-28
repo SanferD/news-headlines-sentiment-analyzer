@@ -33,8 +33,7 @@ def lambda_handler(event, context):
     Raises:
         AssertionError: If the EXECUTION_ROLE_ARN environment variable is not specified.
     """
-    global job_id_global, aws_access_key_id_global
-    global aws_secret_access_key_global, aws_session_token_global
+    global job_id_global
 
     now = datetime.datetime.now()
     now_str = now.isoformat().split('.')[0].replace(':', '-')
@@ -59,9 +58,14 @@ def lambda_handler(event, context):
     input_bucket_name = input_s3_location["bucketName"]
     input_object_key = input_s3_location["objectKey"]
 
-    log.info(f"Load input data from s3://{input_bucket_name}/{input_object_key}")
-    input_response = get_s3_object(input_bucket_name=input_bucket_name,
-                                   input_object_key=input_object_key)
+    log.info(f"Load input from s3://{input_bucket_name}/{input_object_key} with artifact creds")
+    s3_client_for_codepipeline = boto3.client("s3",
+                                              aws_access_key_id=aws_access_key_id_global,
+                                              aws_secret_access_key=aws_secret_access_key_global,
+                                              aws_session_token=aws_session_token_global)
+    input_response = get_s3_object(s3_client=s3_client_for_codepipeline,
+                                   input_bucket_name=input_bucket_name,
+                                   input_object_key=input_object_key,)
     input_data = json.loads(input_response["Body"].read())
     model_package_arn = input_data[MODEL_PACKAGE_ARN]
     log.info(f"Loaded {MODEL_PACKAGE_ARN}={model_package_arn}")
@@ -91,13 +95,9 @@ def create_sagemaker_model(execution_role_arn, model_package_arn, model_name):
         raise e
 
 
-def get_s3_object(input_bucket_name, input_object_key):
+def get_s3_object(s3_client, input_bucket_name, input_object_key):
     """Gets the S3 object s3://{input_bucket_name}/{input_object_key}"""
     try:
-        s3_client = boto3.client("s3",
-                                 aws_access_key_id=aws_access_key_id_global,
-                                 aws_secret_access_key=aws_secret_access_key_global,
-                                 aws_session_token=aws_session_token_global)
         return s3_client.get_object(Bucket=input_bucket_name, Key=input_object_key)
     except ClientError as e:
         log.exception("Unexpected error")
