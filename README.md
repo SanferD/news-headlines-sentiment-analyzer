@@ -1,5 +1,15 @@
 # News Headlines Sentiment Analyzer
 
+## Table of Contents
+
+1. [Architecture](#architecture)
+   1. [Buckets](#buckets)
+   2. [Model Pipeline](#model-pipeline)
+      1. [Data](#data)
+   3. [Deployment Pipeline](#deployment-pipeline)
+   4. [ECS Application](#ecs-application)
+2. [Deployment Instructions](#deployment-instructions)
+
 ## Architecture
 
 ![sentiment-analysis drawio](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/25a8bc08-8557-4c2e-b99b-7569dc0c04a9)
