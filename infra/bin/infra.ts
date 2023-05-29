@@ -7,6 +7,7 @@ import { SagemakerSetupStack } from '../lib/sagemaker-setup-stack';
 import { DeploymentPipelineLambdasStack } from '../lib/deployment-pipeline-lambdas-stack';
 import { DeploymentPipelineStack } from '../lib/deployment-pipeline-stack';
 import { DeploymentPipelineTriggerStack } from '../lib/deployment-pipeline-trigger-stack';
+import { EcsApplicationStack } from '../lib/ecs-application-stack';
 
 interface StackProps {
   env: {account: string, region: string}
@@ -57,6 +58,10 @@ function createStacks({app, stackProps} : createStacksProps) {
     triggerModelDeploy: deploymentPipelineLambdasStack.triggerModelDeploy,
   })
 
+  const ecsApplicationStack = new EcsApplicationStack(app, "EcsApplicationStack", {
+    ...stackProps
+  })
+  ecsApplicationStack.addDependency(deploymentPipelineStack)
 }
 
 const app = new cdk.App();
