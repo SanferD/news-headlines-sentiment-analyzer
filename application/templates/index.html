@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Headline Sentiment Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        #app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .result-container h2 {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-input v-model="headline" placeholder="Enter a headline"></el-input>
+    <el-button @click="analyze">Analyze</el-button>
+    <div class="result-container" v-if="result">
+        <p>{{ headline }}</p>
+        <h2 v-if="result.sentiment === 'good'" style="color: green;">Good</h2>
+        <h2 v-if="result.sentiment === 'bad'" style="color: red;">Bad</h2>
+        <h2 v-if="result.sentiment === 'neutral'" style="color: orange;">Neutral</h2>
+    </div>
+</div>
+
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            headline: '',
+            result: null
+        },
+        methods: {
+            analyze() {
+                axios.post('/analyze', {headline: this.headline})
+                    .then(response => {
+                        this.result = response.data;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+        }
+    });
+</script>
+</body>
+</html>
