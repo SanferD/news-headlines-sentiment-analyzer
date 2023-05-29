@@ -132,7 +132,7 @@ blazing_text_estimator = sagemaker.estimator.Estimator(
     input_mode="File",
     hyperparameters={
         "mode": "supervised",
-        "epochs": 20,
+        "epochs": 100,
         "min_count": 2,
         "learning_rate": 0.05,
         "vector_dim": 10,
