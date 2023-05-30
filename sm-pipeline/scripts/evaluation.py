@@ -84,8 +84,8 @@ def compute_metrics(true_labels_df: pd.DataFrame, found_labels_df: pd.DataFrame)
     Returns:
         dict: A dictionary containing the computed evaluation metrics.
     """
-    true_labels = true_labels_df["label"].values
-    found_labels = found_labels_df["label"].values
+    true_labels = true_labels_df["label"].to_numpy()
+    found_labels = found_labels_df["label"].to_numpy()
 
     accuracy = accuracy_score(true_labels, found_labels)
     precision = precision_score(true_labels, found_labels, average="macro")

@@ -235,10 +235,8 @@ evaluation_step = ProcessingStep(
 )
 
 # Register Model step
-s3_uri = "{}/{}".format(
-    evaluation_step.arguments["ProcessingOutputConfig"]["Outputs"][0]["S3Output"]["S3Uri"],
-    constants.EVALUATION_FILE_NAME
-)
+evaluation_step_outputs = evaluation_step.properties.ProcessingOutputConfig.Outputs
+
 register_model_step_args = model.register(
     content_types=["application/json"],
     response_types=["application/json"],
@@ -247,7 +245,13 @@ register_model_step_args = model.register(
     model_package_group_name=MODEL_PACKAGE_GROUP_NAME,
     model_metrics=ModelMetrics(
         model_statistics=MetricsSource(
-            s3_uri=s3_uri,
+            s3_uri=Join(
+                on="/",
+                values=[
+                    evaluation_step_outputs[constants.EVALUATION_CHANNEL].S3Output.S3Uri,
+                    constants.EVALUATION_FILE_NAME,
+                ],
+            ),
             content_type="application/json"
         ),
     ),
@@ -257,6 +261,7 @@ register_model_step_args = model.register(
 register_model_step = ModelStep(
     name=generate_step_name("RegisterModel"),
     step_args=register_model_step_args,
+    depends_on=[evaluation_step], # sagemaker unable to infer this without help
 )
 
 # Create pipeline
