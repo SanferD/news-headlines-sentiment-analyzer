@@ -2,13 +2,7 @@
 
 ## Table of Contents
 
-1. [Architecture](#architecture)
-   1. [Buckets](#buckets)
-   2. [Model Pipeline](#model-pipeline)
-      1. [Data](#data)
-   3. [Deployment Pipeline](#deployment-pipeline)
-   4. [ECS Application](#ecs-application)
-2. [Deployment Instructions](#deployment-instructions)
+The hamburger button on the left side of README.md title contains the table of contents.
 
 ## Architecture
 
@@ -190,7 +184,7 @@ By following this pipeline, the approved model versions can be seamlessly deploy
    4. Set up the entire model pipeline, which can be manually executed in Sagemaker Studio.
 
    ![open-studio](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/2e042d18-8a16-4521-b619-879df827d8d2)
-   ![pipeline](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/a7b25cab-46c5-4d71-b658-1867be479fe0)
+   ![sagemaker-model-pipeline](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/339afe2d-8e35-4d3b-a745-d8e5b032ced7)
    ![model-quality](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/e914c320-ae1e-40fe-9577-b0e0c6b87e83)
 6. Deployment Pipeline:
    - Deploy the `DeploymentPipelineTriggerStack` and the `DeploymentPipelineStack`.
@@ -218,3 +212,13 @@ By following this pipeline, the approved model versions can be seamlessly deploy
 Note: When debugging ECS tasks, it can be helpful to refer to the ECS Task logs.
 
    ![ecs-task-logs](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/df75101c-57fc-46cf-b9d3-2e3491feaadf)
+   
+## TODOs
+
+Although there is no guarantee that I will have the opportunity to investigate these areas, here are some topics I would like to explore:
+
+1. Model monitoring and automated retraining for addressing model drift.
+2. Enhancing model accuracy.
+3. Designing an improved ModelPipeline to support multiple data scientists submitting custom PyTorch and TensorFlow models.
+4. Implementing the ability to reject a model version and revert to the latest approved version.
+5. Improving error handling in cases where a SageMaker endpoint is unavailable.
