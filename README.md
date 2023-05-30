@@ -6,7 +6,7 @@ The hamburger button on the left side of README.md title contains the table of c
 
 ## Architecture
 
-![sentiment-analysis drawio](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/25a8bc08-8557-4c2e-b99b-7569dc0c04a9)
+![sentiment-analysis drawio](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/990a70dd-a1c0-4735-8a7d-d6169c74dd16)
 
 ### Buckets
 1. **data-bucket**: This bucket holds raw data that will be used for preprocessing.
@@ -136,9 +136,8 @@ By following this pipeline, the approved model versions can be seamlessly deploy
    - See [AWS CLI Configure Role documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html) for more information.
    - I named my role **sagemaker-role** and granted it **AdministratorAccess**.
 
-        ![sagemaker-role](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/fcda9033-701d-403e-b2c6-2699229e7ee3)
-
-        ![sagemaker-trust-entity](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/956136dc-82c2-486c-9365-8e153ffa6f85)
+        ![sagemaker-role](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/9a1313ba-a42e-4762-8b15-309ae3bf6c8b)
+        ![sagemaker-trust-entity](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/eeeeff25-8fdd-4cb6-b344-584f690300fc)
 
    - Update the `~/.aws/config` file with the following content:
 
@@ -183,9 +182,9 @@ By following this pipeline, the approved model versions can be seamlessly deploy
    3. Create a domain named `news-headlines` and a user profile named `my-user`.
    4. Set up the entire model pipeline, which can be manually executed in Sagemaker Studio.
 
-   ![open-studio](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/2e042d18-8a16-4521-b619-879df827d8d2)
-   ![sagemaker-model-pipeline](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/339afe2d-8e35-4d3b-a745-d8e5b032ced7)
-   ![model-quality](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/e914c320-ae1e-40fe-9577-b0e0c6b87e83)
+   ![open-studio](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/e94ddbd6-610e-4557-9cbe-46e7ab1ee38d)
+   ![sagemaker-model-pipeline](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/4eeae6f8-d3cb-451b-8369-b80c49949754)
+   ![model-quality](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/4257fe93-0797-4c46-99b0-0f177cd1870e)
 6. Deployment Pipeline:
    - Deploy the `DeploymentPipelineTriggerStack` and the `DeploymentPipelineStack`.
    - These stacks will perform the following actions:
@@ -193,25 +192,24 @@ By following this pipeline, the approved model versions can be seamlessly deploy
      2. Create the **CreateOrUpdateEndpoint Lambda**, which creates or updates the endpoint to the approved SageMaker model version.
      3. Create an EventBridge rule that triggers the **Trigger Lambda** whenever a model is approved.
      4. Create a CodePipeline with a Source stage that watches for changes to **s3://data-bucket/approved-model.json**. This is followed by a Deploy stage that triggers the **CreateOrUpdateEndpoint Lambda** to deploy the SageMaker endpoint.
-   ![update-model-version-status](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/d65e4b9e-1f33-4953-9aad-edbddaa77029)
-   ![trigger-logs](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/824cf15d-7437-46c4-809d-3f1b6ce99e28)
-   ![codepipeline](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/a032ea04-cf52-41cd-b02f-ba01f3588f7e)
-   ![create-or-update-logs](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/93c87f49-bf99-46e9-92f6-450addde4c8c)
-
-![Endpoints](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/4da71971-8652-4557-895b-e5a4c919881a)
+   ![update-model-version-status](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/909b9320-cf76-4da4-86bf-b90435231da5)
+   ![trigger-logs](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/75338f59-5c0c-47ac-a868-d187649c8a86)
+   ![codepipeline](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/9b5e7a6e-9408-4573-a863-e0fcaedbdb97)
+   ![create-or-update-logs](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/e50b0273-6c65-4b52-990a-c51df913ad4d)
+   ![endpoints](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/e0b955e8-9a89-4ceb-9f7f-df2e9d9f3895)
 
 7. Application Deployment:
    - Deploy the `EcsApplicationStack` to launch the application.
    - Navigate to EC2 > Load Balancers and find the corresponding Load Balancer.
    - Copy and paste the DNS name of the Load Balancer in a browser using HTTP to access the application.
 
-   ![alb](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/ff9cf6a3-0c00-4aaa-8374-8e4542c0b6a6)
-   ![analyze-good](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/acc91543-b055-4bab-a304-a264f8e60fc6)
-   ![analyze-bad](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/253c0b19-eb03-4b70-95e4-03020e817be8)
+   ![alb](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/cbd3dbf0-4ceb-4e67-8911-77c558fd15df)
+   ![analyze-good](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/59080396-ffa1-40e0-a514-e0633af71af9)
+   ![analyze-bad](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/d7c956eb-230e-496e-845f-79ec589c2d6a)
 
 Note: When debugging ECS tasks, it can be helpful to refer to the ECS Task logs.
 
-   ![ecs-task-logs](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/df75101c-57fc-46cf-b9d3-2e3491feaadf)
+   ![ecs-task-logs](https://github.com/SanferD/news-headlines-sentiment-analyzer/assets/9338001/edd3ed7c-c604-49b7-ad0d-a26ff251d225)
    
 ## TODOs
 
